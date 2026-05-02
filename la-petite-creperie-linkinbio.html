@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>La Petite Crêperie — Maisons-Laffitte</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400;1,600&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal:        #0D4A5C;
+    --teal-dark:   #0A3A48;
+    --teal-deeper: #072E3A;
+    --cream:       #F2EAD8;
+    --cream-dim:   rgba(242,234,216,0.85);
+    --gold:        #C4A35A;
+    --gold-light:  #D9BC7A;
+    --gold-dim:    rgba(196,163,90,0.18);
+    --gold-border: rgba(196,163,90,0.28);
+  }
+
+  html, body {
+    min-height: 100%;
+    background: var(--teal-deeper);
+  }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--cream);
+    max-width: 480px;
+    margin: 0 auto;
+    position: relative;
+    animation: fadeIn 0.4s ease both;
+  }
+
+  @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+  /* ══ HERO LOGO ══ */
+  .hero {
+    width: 100%;
+    position: relative;
+    overflow: hidden;
+    line-height: 0;
+  }
+
+  .hero img {
+    width: 100%;
+    height: auto;
+    display: block;
+  }
+
+  /* golden bottom fade so it blends into the page */
+  .hero::after {
+    content: '';
+    position: absolute;
+    bottom: 0; left: 0; right: 0;
+    height: 48px;
+    background: linear-gradient(to bottom, transparent, var(--teal-deeper));
+    pointer-events: none;
+  }
+
+  /* ══ GOLD SWIRL SVG (ambient decoration) ══ */
+  .swirl-layer {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    overflow: hidden;
+  }
+
+  /* ══ PAGE WRAPPER ══ */
+  .page {
+    position: relative;
+    background: var(--teal-deeper);
+  }
+
+  /* Ambient swirls behind content */
+  .page-swirls {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
+    z-index: 0;
+  }
+
+  .page-swirls svg {
+    position: absolute;
+    opacity: 0.55;
+  }
+
+  .page-swirls svg:nth-child(1) { top: 0;    left: -40px; }
+  .page-swirls svg:nth-child(2) { top: 30%;  right: -40px; }
+  .page-swirls svg:nth-child(3) { top: 62%;  left: -30px; }
+  .page-swirls svg:nth-child(4) { bottom: 0; right: -20px; }
+
+  /* ══ INFO BAR ══ */
+  .info-bar {
+    display: flex;
+    border-bottom: 1px solid var(--gold-border);
+    position: relative;
+    z-index: 1;
+  }
+
+  .info-item {
+    flex: 1;
+    padding: 1rem 0.5rem;
+    text-align: center;
+    border-right: 1px solid var(--gold-border);
+  }
+  .info-item:last-child { border-right: none; }
+
+  .info-item .lbl {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.12em;
+    color: var(--gold-light);
+    display: block;
+    margin-bottom: 4px;
+    opacity: 0.7;
+  }
+  .info-item .val {
+    font-size: 0.8rem;
+    font-weight: 500;
+    color: var(--cream);
+    line-height: 1.35;
+  }
+
+  /* ══ CONTENT ══ */
+  .content {
+    padding: 1.25rem 1.1rem;
+    display: flex;
+    flex-direction: column;
+    gap: 0.65rem;
+    position: relative;
+    z-index: 1;
+  }
+
+  /* gold ornamental divider */
+  .gold-divider {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 0.2rem;
+  }
+  .gold-divider span {
+    flex: 1;
+    height: 1px;
+    background: linear-gradient(to right, transparent, var(--gold-border), transparent);
+  }
+  .gold-divider svg { flex-shrink: 0; }
+
+  /* ══ BUTTONS ══ */
+  .btn {
+    display: flex;
+    align-items: center;
+    gap: 14px;
+    padding: 1rem 1.1rem;
+    border-radius: 14px;
+    text-decoration: none;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.95rem;
+    font-weight: 500;
+    transition: transform 0.15s, opacity 0.15s;
+    border: none;
+    width: 100%;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .btn:active { transform: scale(0.98); }
+
+  /* gold shimmer on hover */
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(105deg, transparent 40%, rgba(196,163,90,0.15) 50%, transparent 60%);
+    transform: translateX(-100%);
+    transition: transform 0.5s;
+  }
+  .btn:hover::after { transform: translateX(100%); }
+
+  .btn-gold {
+    background: var(--gold);
+    color: var(--teal-deeper);
+    box-shadow: 0 2px 16px rgba(196,163,90,0.3);
+  }
+  .btn-gold:hover { opacity: 0.93; }
+
+  .btn-outline {
+    background: rgba(196,163,90,0.07);
+    color: var(--cream);
+    border: 1px solid var(--gold-border);
+  }
+  .btn-outline:hover { background: rgba(196,163,90,0.12); }
+
+  .btn-icon {
+    width: 38px; height: 38px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.13);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+  .btn-gold .btn-icon { background: rgba(10,58,72,0.22); }
+
+  .btn .lbl { flex: 1; text-align: left; }
+  .btn .arr { opacity: 0.5; flex-shrink: 0; }
+
+  /* ══ RATING ══ */
+  .rating {
+    background: var(--gold-dim);
+    border: 1px solid var(--gold-border);
+    border-radius: 14px;
+    padding: 0.85rem 1.1rem;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .stars { font-size: 0.9rem; color: var(--gold); letter-spacing: 2px; }
+  .score { font-size: 1.05rem; font-weight: 500; color: var(--cream); white-space: nowrap; }
+  .r-lbl { font-size: 0.72rem; color: var(--gold-light); line-height: 1.45; opacity: 0.85; }
+
+  /* ══ SECTION LABEL ══ */
+  .sec-lbl {
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 0.14em;
+    color: var(--gold-light);
+    opacity: 0.65;
+  }
+
+  /* ══ SOCIAL GRID ══ */
+  .social-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0.55rem;
+  }
+
+  .soc-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 7px;
+    padding: 0.85rem 0.2rem;
+    border-radius: 14px;
+    text-decoration: none;
+    border: 1px solid var(--gold-border);
+    background: rgba(196,163,90,0.05);
+    transition: background 0.15s, transform 0.15s;
+  }
+  .soc-btn:active { transform: scale(0.96); }
+  .soc-btn:hover  { background: rgba(196,163,90,0.12); }
+
+  .soc-btn .soc-lbl {
+    font-size: 0.58rem;
+    font-weight: 500;
+    color: var(--cream);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    text-align: center;
+    opacity: 0.75;
+  }
+
+  /* ══ FOOTER ══ */
+  .footer {
+    border-top: 1px solid var(--gold-border);
+    padding: 1.1rem 1.1rem 2.5rem;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+  .footer p {
+    font-size: 0.75rem;
+    color: var(--gold-light);
+    line-height: 1.7;
+    opacity: 0.65;
+  }
+</style>
+</head>
+<body>
+
+  <!-- Hero: logo full width -->
+  <div class="hero">
+    <img src="1777762269578_image.png" alt="La Petite Crêperie — Maisons-Laffitte">
+  </div>
+
+  <!-- Page with ambient gold swirls -->
+  <div class="page">
+
+    <!-- Decorative gold swirl SVGs echoing the logo background -->
+    <div class="page-swirls">
+
+      <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="60" cy="60" rx="55" ry="40" stroke="#C4A35A" stroke-width="0.8" transform="rotate(-20 60 60)"/>
+        <ellipse cx="80" cy="90" rx="70" ry="50" stroke="#C4A35A" stroke-width="0.6" transform="rotate(15 80 90)"/>
+        <ellipse cx="40" cy="110" rx="45" ry="30" stroke="#C4A35A" stroke-width="0.5" transform="rotate(-35 40 110)"/>
+      </svg>
+
+      <svg width="180" height="180" viewBox="0 0 180 180" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="120" cy="50" rx="60" ry="42" stroke="#C4A35A" stroke-width="0.8" transform="rotate(25 120 50)"/>
+        <ellipse cx="100" cy="80" rx="75" ry="48" stroke="#C4A35A" stroke-width="0.55" transform="rotate(-10 100 80)"/>
+        <ellipse cx="140" cy="120" rx="40" ry="28" stroke="#C4A35A" stroke-width="0.5" transform="rotate(40 140 120)"/>
+      </svg>
+
+      <svg width="200" height="160" viewBox="0 0 200 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="50" cy="70" rx="65" ry="44" stroke="#C4A35A" stroke-width="0.75" transform="rotate(-15 50 70)"/>
+        <ellipse cx="90" cy="100" rx="80" ry="52" stroke="#C4A35A" stroke-width="0.5" transform="rotate(20 90 100)"/>
+      </svg>
+
+      <svg width="160" height="160" viewBox="0 0 160 160" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <ellipse cx="100" cy="80" rx="55" ry="38" stroke="#C4A35A" stroke-width="0.75" transform="rotate(30 100 80)"/>
+        <ellipse cx="80" cy="110" rx="70" ry="46" stroke="#C4A35A" stroke-width="0.55" transform="rotate(-18 80 110)"/>
+        <ellipse cx="120" cy="50" rx="42" ry="28" stroke="#C4A35A" stroke-width="0.5" transform="rotate(50 120 50)"/>
+      </svg>
+
+    </div>
+
+    <!-- Info bar -->
+    <div class="info-bar">
+      <div class="info-item">
+        <span class="lbl">Mar – Sam</span>
+        <span class="val">12h–14h30<br>19h–22h30</span>
+      </div>
+      <div class="info-item">
+        <span class="lbl">Dimanche</span>
+        <span class="val">12h–15h</span>
+      </div>
+      <div class="info-item">
+        <span class="lbl">Prix moyen</span>
+        <span class="val">~23 €</span>
+      </div>
+    </div>
+
+    <!-- Buttons & content -->
+    <div class="content">
+
+      <!-- Gold ornament -->
+      <div class="gold-divider">
+        <span></span>
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <path d="M1 5 Q4.5 1 9 5 Q13.5 9 17 5" stroke="#C4A35A" stroke-width="0.9" fill="none" opacity="0.6"/>
+        </svg>
+        <span></span>
+      </div>
+
+      <a href="https://www.lapetitecreperie-maisonslaffitte.fr/reserver-une-table/" target="_blank" class="btn btn-gold">
+        <div class="btn-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01"/></svg>
+        </div>
+        <span class="lbl">Réserver une table</span>
+        <span class="arr">→</span>
+      </a>
+
+      <a href="https://www.lapetitecreperie-maisonslaffitte.fr/menus-carte/" target="_blank" class="btn btn-outline">
+        <div class="btn-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/></svg>
+        </div>
+        <span class="lbl">Voir la carte & les menus</span>
+        <span class="arr">→</span>
+      </a>
+
+      <a href="https://www.google.com/maps/search/La+Petite+Cr%C3%AAperie+25+Av+du+G%C3%A9n%C3%A9ral+de+Gaulle+78600+Maisons-Laffitte" target="_blank" class="btn btn-outline">
+        <div class="btn-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        </div>
+        <span class="lbl">Nous trouver · Maisons-Laffitte</span>
+        <span class="arr">→</span>
+      </a>
+
+      <a href="tel:0952196961" class="btn btn-outline">
+        <div class="btn-icon">
+          <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 13a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 2.18h3a2 2 0 0 1 2 1.72c.13.96.36 1.9.69 2.81a2 2 0 0 1-.45 2.11L7.91 9.91a16 16 0 0 0 6.18 6.18l.91-.91a2 2 0 0 1 2.11-.45c.91.33 1.85.56 2.81.69a2 2 0 0 1 1.72 2z"/></svg>
+        </div>
+        <span class="lbl">09 52 19 69 61</span>
+        <span class="arr">→</span>
+      </a>
+
+      <div class="rating">
+        <div><div class="stars">★★★★★</div></div>
+        <div class="score">9.3 / 10</div>
+        <div class="r-lbl">Noté Excellent<br>sur TheFork · 98 avis</div>
+      </div>
+
+      <!-- Second ornament -->
+      <div class="gold-divider">
+        <span></span>
+        <svg width="18" height="10" viewBox="0 0 18 10" fill="none">
+          <path d="M1 5 Q4.5 9 9 5 Q13.5 1 17 5" stroke="#C4A35A" stroke-width="0.9" fill="none" opacity="0.6"/>
+        </svg>
+        <span></span>
+      </div>
+
+      <p class="sec-lbl">Nous suivre</p>
+
+      <div class="social-grid">
+
+        <a href="https://www.instagram.com/la_petite_creperie__/" target="_blank" class="soc-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#E1306C" stroke-width="1.8">
+            <rect x="2" y="2" width="20" height="20" rx="5"/>
+            <circle cx="12" cy="12" r="4"/>
+            <circle cx="17.5" cy="6.5" r="0.8" fill="#E1306C" stroke="none"/>
+          </svg>
+          <span class="soc-lbl">Instagram</span>
+        </a>
+
+        <a href="https://www.tiktok.com/@la.petite.creperi" target="_blank" class="soc-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#F2EAD8">
+            <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.34 6.34 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V9.03a8.16 8.16 0 0 0 4.77 1.52V7.12a4.85 4.85 0 0 1-1-.43z"/>
+          </svg>
+          <span class="soc-lbl">TikTok</span>
+        </a>
+
+        <a href="https://www.facebook.com/p/La-Petite-Cr%C3%AAperie-61577332419843/" target="_blank" class="soc-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#4267B2">
+            <path d="M24 12.07C24 5.41 18.63 0 12 0S0 5.41 0 12.07C0 18.1 4.39 23.1 10.13 24v-8.44H7.08v-3.49h3.04V9.41c0-3.02 1.8-4.7 4.54-4.7 1.31 0 2.68.24 2.68.24v2.97h-1.51c-1.49 0-1.95.93-1.95 1.88v2.27h3.32l-.53 3.49h-2.79V24C19.61 23.1 24 18.1 24 12.07z"/>
+          </svg>
+          <span class="soc-lbl">Facebook</span>
+        </a>
+
+        <a href="https://www.thefork.fr/restaurant/la-petite-creperie-r856089" target="_blank" class="soc-btn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#00B28A" stroke-width="1.8">
+            <path d="M18 8h1a4 4 0 0 1 0 8h-1"/>
+            <path d="M2 8h16v9a4 4 0 0 1-4 4H6a4 4 0 0 1-4-4V8z"/>
+            <line x1="6" y1="1" x2="6" y2="4"/>
+            <line x1="10" y1="1" x2="10" y2="4"/>
+            <line x1="14" y1="1" x2="14" y2="4"/>
+          </svg>
+          <span class="soc-lbl">TheFork</span>
+        </a>
+
+      </div>
+
+    </div>
+
+    <div class="footer">
+      <p>25 Av. du Général de Gaulle · 78600 Maisons-Laffitte<br>À 2 min du RER A</p>
+    </div>
+
+  </div>
+
+</body>
+</html>
