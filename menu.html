@@ -1,0 +1,1519 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Carte — La Petite Crêperie</title>
+<link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --teal-deeper: #003d56;
+    --teal-elev:   #004d6b;
+    --cream:       #F2EAD8;
+    --cream-dim:   rgba(242,234,216,0.7);
+    --gold:        #C4A35A;
+    --gold-light:  #D9BC7A;
+    --gold-dim:    rgba(196,163,90,0.18);
+    --gold-border: rgba(196,163,90,0.28);
+  }
+
+  html, body { min-height: 100%; background: var(--teal-deeper); scroll-behavior: smooth; }
+
+  body {
+    font-family: 'DM Sans', sans-serif;
+    color: var(--cream);
+    max-width: 520px;
+    margin: 0 auto;
+    padding-bottom: 3rem;
+    position: relative;
+  }
+
+  /* HEADER */
+  .header {
+    position: sticky; top: 0; z-index: 20;
+    background: var(--teal-deeper);
+    border-bottom: 1px solid var(--gold-border);
+  }
+  .header-top {
+    display: flex; align-items: center;
+    padding: 0.75rem 1rem;
+    gap: 12px;
+  }
+  .back {
+    display: flex; align-items: center; gap: 6px;
+    color: var(--gold-light); text-decoration: none;
+    font-size: 0.8rem; opacity: 0.75;
+    padding: 6px 8px 6px 0;
+  }
+  .back:hover { opacity: 1; }
+  .brand {
+    flex: 1; text-align: center;
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--cream);
+    letter-spacing: 0.02em;
+  }
+  .brand em { font-style: italic; color: var(--gold-light); font-weight: 400; }
+
+  .lang-switch {
+    display: flex; gap: 3px;
+    background: rgba(196,163,90,0.08);
+    border: 1px solid var(--gold-border);
+    border-radius: 999px;
+    padding: 3px;
+  }
+  .lang-switch button {
+    background: none; border: none;
+    color: var(--cream); opacity: 0.55;
+    font-family: 'DM Sans', sans-serif;
+    font-size: 0.7rem; font-weight: 500;
+    letter-spacing: 0.06em;
+    padding: 5px 10px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .lang-switch button.active {
+    background: var(--gold);
+    color: var(--teal-deeper);
+    opacity: 1;
+  }
+
+  /* CATEGORY NAV */
+  .cat-nav {
+    display: flex; gap: 8px;
+    padding: 0.6rem 1rem 0.75rem;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -webkit-overflow-scrolling: touch;
+  }
+  .cat-nav::-webkit-scrollbar { display: none; }
+  .cat-nav a {
+    flex-shrink: 0;
+    padding: 6px 12px;
+    border: 1px solid var(--gold-border);
+    border-radius: 999px;
+    color: var(--cream); text-decoration: none;
+    font-size: 0.72rem;
+    letter-spacing: 0.04em;
+    opacity: 0.75;
+    background: rgba(196,163,90,0.04);
+    transition: all 0.15s;
+    white-space: nowrap;
+  }
+  .cat-nav a:hover, .cat-nav a.active {
+    opacity: 1;
+    background: var(--gold-dim);
+    color: var(--gold-light);
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 1.5rem 1.1rem 0.5rem;
+    scroll-margin-top: 110px;
+  }
+  .section-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.8rem; font-weight: 600;
+    color: var(--cream);
+    text-align: center;
+    margin-bottom: 0.2rem;
+    letter-spacing: 0.01em;
+  }
+  .section-subtitle {
+    text-align: center;
+    font-size: 0.72rem;
+    color: var(--gold-light);
+    font-style: italic;
+    opacity: 0.8;
+    margin-bottom: 1rem;
+  }
+
+  .section-orn {
+    display: flex; justify-content: center; margin-bottom: 1rem;
+  }
+  .section-orn svg { opacity: 0.5; }
+
+  .subsection-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.15rem; font-weight: 600;
+    color: var(--gold-light);
+    margin: 1.4rem 0 0.6rem;
+    padding-bottom: 0.3rem;
+    border-bottom: 1px solid var(--gold-border);
+    letter-spacing: 0.03em;
+  }
+  .subsection-title:first-child { margin-top: 0; }
+
+  /* ITEMS */
+  .items { display: flex; flex-direction: column; gap: 0.9rem; }
+
+  .item {
+    padding: 0.1rem 0;
+  }
+
+  .item-head {
+    display: flex; align-items: baseline;
+    gap: 8px;
+    margin-bottom: 3px;
+  }
+  .item-name {
+    font-weight: 500;
+    color: var(--cream);
+    font-size: 0.95rem;
+    flex-shrink: 0;
+  }
+  .item-name .veg {
+    font-size: 0.62rem;
+    color: #85c48a;
+    background: rgba(133,196,138,0.12);
+    border: 1px solid rgba(133,196,138,0.3);
+    border-radius: 4px;
+    padding: 1px 5px;
+    margin-left: 6px;
+    letter-spacing: 0.03em;
+    vertical-align: middle;
+    font-weight: 400;
+    font-style: normal;
+  }
+  .item-dots {
+    flex: 1;
+    border-bottom: 1px dotted var(--gold-border);
+    transform: translateY(-3px);
+    min-width: 12px;
+  }
+  .item-price {
+    font-weight: 500;
+    color: var(--gold-light);
+    font-size: 0.9rem;
+    flex-shrink: 0;
+    white-space: nowrap;
+  }
+  .item-desc {
+    font-size: 0.78rem;
+    color: var(--cream-dim);
+    line-height: 1.45;
+    font-style: italic;
+    padding-right: 20px;
+  }
+
+  /* MULTI-PRICE ITEM (beers, wines, ciders) */
+  .item-multi .item-head { flex-wrap: wrap; }
+  .price-grid {
+    display: flex; flex-wrap: wrap; gap: 6px 10px;
+    margin-top: 4px;
+  }
+  .price-grid span {
+    font-size: 0.78rem;
+    color: var(--gold-light);
+    background: var(--gold-dim);
+    border-radius: 6px;
+    padding: 2px 8px;
+    white-space: nowrap;
+  }
+  .price-grid span b {
+    color: var(--cream);
+    font-weight: 500;
+    margin-right: 4px;
+    opacity: 0.75;
+    font-size: 0.68rem;
+  }
+
+  /* FORMULE BOX */
+  .formule-box {
+    background: linear-gradient(135deg, var(--gold-dim), rgba(196,163,90,0.08));
+    border: 1px solid var(--gold-border);
+    border-radius: 14px;
+    padding: 1.1rem;
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+  .formule-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.4rem; font-weight: 600;
+    color: var(--cream);
+    display: flex; align-items: baseline; justify-content: center; gap: 8px;
+  }
+  .formule-title .price {
+    color: var(--gold-light);
+    font-size: 1.2rem;
+  }
+  .formule-sub {
+    font-size: 0.7rem;
+    color: var(--gold-light);
+    font-style: italic;
+    opacity: 0.8;
+    margin: 4px 0 0.7rem;
+  }
+  .formule-content {
+    font-size: 0.85rem;
+    color: var(--cream);
+    line-height: 1.7;
+  }
+  .formule-content .plus {
+    display: inline-flex;
+    width: 18px; height: 18px;
+    border-radius: 50%;
+    background: var(--gold);
+    color: var(--teal-deeper);
+    font-weight: 600;
+    font-size: 0.75rem;
+    align-items: center;
+    justify-content: center;
+    margin-right: 6px;
+    vertical-align: middle;
+  }
+
+  /* NOTE / DISCLAIMER */
+  .note {
+    font-size: 0.7rem;
+    color: var(--gold-light);
+    opacity: 0.7;
+    text-align: center;
+    font-style: italic;
+    margin-top: 0.7rem;
+  }
+
+  /* HAPPY HOUR HIGHLIGHT */
+  .happy-box {
+    background: linear-gradient(135deg, rgba(217,188,122,0.15), rgba(196,163,90,0.08));
+    border: 1px solid var(--gold);
+    border-radius: 12px;
+    padding: 0.85rem 1rem;
+    margin: 1rem 0;
+    text-align: center;
+  }
+  .happy-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.1rem; font-weight: 600;
+    color: var(--gold-light);
+    margin-bottom: 3px;
+    letter-spacing: 0.05em;
+  }
+  .happy-desc {
+    font-size: 0.75rem;
+    color: var(--cream);
+    line-height: 1.5;
+  }
+  .happy-desc small {
+    display: block;
+    color: var(--cream-dim);
+    font-size: 0.65rem;
+    margin-top: 3px;
+    font-style: italic;
+  }
+
+  /* FOOTER */
+  .footer {
+    margin-top: 2rem;
+    padding: 1.5rem 1.1rem;
+    border-top: 1px solid var(--gold-border);
+    text-align: center;
+  }
+  .footer-block { margin-bottom: 1rem; }
+  .footer-block:last-child { margin-bottom: 0; }
+  .footer p {
+    font-size: 0.7rem;
+    color: var(--gold-light);
+    line-height: 1.7;
+    opacity: 0.75;
+  }
+  .footer .addr {
+    color: var(--cream);
+    font-weight: 500;
+    opacity: 0.9;
+  }
+  .footer .disclaimer {
+    font-size: 0.62rem;
+    opacity: 0.55;
+    margin-top: 0.8rem;
+    font-style: italic;
+  }
+
+  /* Hide untranslated when JS active */
+  .lang-hide { display: none !important; }
+
+  @media (max-width: 380px) {
+    .brand { font-size: 0.95rem; }
+    .lang-switch button { padding: 4px 8px; font-size: 0.65rem; }
+    .section-title { font-size: 1.6rem; }
+  }
+</style>
+</head>
+<body>
+
+  <header class="header">
+    <div class="header-top">
+      <a href="index.html" class="back" aria-label="Back">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"><path d="M19 12H5M12 19l-7-7 7-7"/></svg>
+        <span data-fr="Retour" data-en="Back" data-es="Atrás">Retour</span>
+      </a>
+      <div class="brand">La Petite <em>Crêperie</em></div>
+      <div class="lang-switch" role="tablist">
+        <button data-set-lang="fr" class="active" aria-label="Français">FR</button>
+        <button data-set-lang="en" aria-label="English">EN</button>
+        <button data-set-lang="es" aria-label="Español">ES</button>
+      </div>
+    </div>
+    <nav class="cat-nav" id="catNav">
+      <a href="#formules"   data-fr="Formules"    data-en="Set Menus"  data-es="Menús">Formules</a>
+      <a href="#salades"    data-fr="Salades"     data-en="Salads"     data-es="Ensaladas">Salades</a>
+      <a href="#partager"   data-fr="À partager"  data-en="To Share"   data-es="Para Compartir">À partager</a>
+      <a href="#burgers"    data-fr="Burgers"     data-en="Burgers"    data-es="Hamburguesas">Burgers</a>
+      <a href="#galettes"   data-fr="Galettes"    data-en="Galettes"   data-es="Galettes">Galettes</a>
+      <a href="#crepes"     data-fr="Crêpes sucrées" data-en="Sweet Crêpes" data-es="Crepes Dulces">Crêpes sucrées</a>
+      <a href="#desserts"   data-fr="Desserts"    data-en="Desserts"   data-es="Postres">Desserts</a>
+      <a href="#glaces"     data-fr="Glaces"      data-en="Ice Cream"  data-es="Helados">Glaces</a>
+      <a href="#boissons"   data-fr="Boissons"    data-en="Drinks"     data-es="Bebidas">Boissons</a>
+    </nav>
+  </header>
+
+  <!-- FORMULES -->
+  <section id="formules" class="section">
+    <h2 class="section-title" data-fr="Nos Formules" data-en="Set Menus" data-es="Nuestros Menús">Nos Formules</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none">
+        <path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/>
+      </svg>
+    </div>
+
+    <div class="formule-box">
+      <div class="formule-title">
+        <span data-fr="Formule Midi" data-en="Lunch Set" data-es="Menú del Mediodía">Formule Midi</span>
+        <span class="price">16,90 €</span>
+      </div>
+      <div class="formule-sub" data-fr="Du lundi au vendredi — Hors jours fériés"
+                                data-en="Monday to Friday — Excluding public holidays"
+                                data-es="De lunes a viernes — Excepto festivos">
+        Du lundi au vendredi — Hors jours fériés
+      </div>
+      <div class="formule-content">
+        <div data-fr="Galette <em>ou</em> Salade au choix"
+             data-en="Choice of Galette <em>or</em> Salad"
+             data-es="Galette <em>o</em> Ensalada a elegir">Galette <em>ou</em> Salade au choix</div>
+        <div><span class="plus">+</span><span data-fr="Dessert au choix" data-en="Choice of dessert" data-es="Postre a elegir">Dessert au choix</span></div>
+      </div>
+    </div>
+
+    <div class="formule-box">
+      <div class="formule-title">
+        <span data-fr="Menu Enfant" data-en="Kids Menu" data-es="Menú Infantil">Menu Enfant</span>
+        <span class="price">11,90 €</span>
+      </div>
+      <div class="formule-sub" data-fr="Moins de 11 ans" data-en="Under 11 years old" data-es="Menores de 11 años">Moins de 11 ans</div>
+      <div class="formule-content">
+        <div data-fr="Burger <em>ou</em> Galette jambon-emmental"
+             data-en="Burger <em>or</em> Ham & Emmental Galette"
+             data-es="Hamburguesa <em>o</em> Galette de jamón y emmental">Burger <em>ou</em> Galette jambon-emmental</div>
+        <div><span class="plus">+</span><span data-fr="1 crêpe (sucre, Nutella ou confiture) ou 1 boule de glace"
+                                              data-en="1 crêpe (sugar, Nutella or jam) or 1 scoop of ice cream"
+                                              data-es="1 crepe (azúcar, Nutella o mermelada) o 1 bola de helado">1 crêpe (sucre, Nutella ou confiture) ou 1 boule de glace</span></div>
+        <div><span class="plus">+</span><span data-fr="1 jus de fruits (orange, pomme ou abricot)"
+                                              data-en="1 fruit juice (orange, apple or apricot)"
+                                              data-es="1 zumo de frutas (naranja, manzana o albaricoque)">1 jus de fruits (orange, pomme ou abricot)</span></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- SALADES -->
+  <section id="salades" class="section">
+    <h2 class="section-title" data-fr="Salades" data-en="Salads" data-es="Ensaladas">Salades</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none"><path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/></svg>
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">César</span>
+          <span class="item-dots"></span>
+          <span class="item-price">14,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Poulet pané, parmesan, salade, tomates cerises, œuf, sauce césar, croutons"
+           data-en="Breaded chicken, parmesan, lettuce, cherry tomatoes, egg, Caesar dressing, croutons"
+           data-es="Pollo empanado, parmesano, lechuga, tomates cherry, huevo, salsa César, picatostes">
+          Poulet pané, parmesan, salade, tomates cerises, œuf, sauce césar, croutons
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Chèvre Chaud" data-en="Warm Goat Cheese" data-es="Queso de Cabra Caliente">Chèvre Chaud</span>
+          <span class="item-dots"></span>
+          <span class="item-price">14,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Toasts de chèvre chaud, miel, salade, tomates cerises, noix torréfiées"
+           data-en="Warm goat cheese toasts, honey, lettuce, cherry tomatoes, roasted walnuts"
+           data-es="Tostadas de queso de cabra caliente, miel, lechuga, tomates cherry, nueces tostadas">
+          Toasts de chèvre chaud, miel, salade, tomates cerises, noix torréfiées
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Parisienne</span>
+          <span class="item-dots"></span>
+          <span class="item-price">14,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Jambon blanc, œuf, parmesan, champignon de Paris, salade, tomates cerises"
+           data-en="Ham, egg, parmesan, button mushrooms, lettuce, cherry tomatoes"
+           data-es="Jamón cocido, huevo, parmesano, champiñones, lechuga, tomates cherry">
+          Jambon blanc, œuf, parmesan, champignon de Paris, salade, tomates cerises
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Nordique" data-en="Nordic" data-es="Nórdica">Nordique</span>
+          <span class="item-dots"></span>
+          <span class="item-price">15,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Saumon fumé, crémeux de fromage à la ciboulette, oignons rouges, salade, tomates cerises"
+           data-en="Smoked salmon, chive cream cheese, red onions, lettuce, cherry tomatoes"
+           data-es="Salmón ahumado, queso cremoso al cebollino, cebolla morada, lechuga, tomates cherry">
+          Saumon fumé, crémeux de fromage à la ciboulette, oignons rouges, salade, tomates cerises
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- À PARTAGER -->
+  <section id="partager" class="section">
+    <h2 class="section-title" data-fr="À Partager" data-en="To Share" data-es="Para Compartir">À Partager</h2>
+    <div class="section-subtitle" data-fr="(ou pas)" data-en="(or not)" data-es="(o no)">(ou pas)</div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Plateau de Charcuteries" data-en="Charcuterie Board" data-es="Tabla de Embutidos">Plateau de Charcuteries</span>
+          <span class="item-dots"></span>
+          <span class="item-price">15,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Jambon blanc, jambon de pays, saucisson, salade, beurre"
+           data-en="Ham, country ham, dry sausage, lettuce, butter"
+           data-es="Jamón cocido, jamón serrano, salchichón, lechuga, mantequilla">
+          Jambon blanc, jambon de pays, saucisson, salade, beurre
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Plateau de Fromages" data-en="Cheese Board" data-es="Tabla de Quesos">Plateau de Fromages</span>
+          <span class="item-dots"></span>
+          <span class="item-price">15,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Chèvre, Roquefort, Comté, salade, confiture de figue"
+           data-en="Goat cheese, Roquefort, Comté, lettuce, fig jam"
+           data-es="Queso de cabra, Roquefort, Comté, lechuga, mermelada de higo">
+          Chèvre, Roquefort, Comté, salade, confiture de figue
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Plateau Mixte" data-en="Mixed Board" data-es="Tabla Mixta">Plateau Mixte</span>
+          <span class="item-dots"></span>
+          <span class="item-price">17,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Assortiment de charcuteries et de fromages"
+           data-en="Assortment of cured meats and cheeses"
+           data-es="Surtido de embutidos y quesos">
+          Assortiment de charcuteries et de fromages
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- BURGERS -->
+  <section id="burgers" class="section">
+    <h2 class="section-title" data-fr="Burgers Gourmets" data-en="Gourmet Burgers" data-es="Hamburguesas Gourmet">Burgers Gourmets</h2>
+    <div class="section-subtitle"
+         data-fr="Accompagnés de frites ou d'une salade"
+         data-en="Served with fries or a salad"
+         data-es="Con patatas fritas o ensalada">
+      Accompagnés de frites ou d'une salade
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Le Bistronome</span>
+          <span class="item-dots"></span>
+          <span class="item-price">15,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Pain brioché, sauce burger, tomate, salade, oignons confits, cheddar, steak haché"
+           data-en="Brioche bun, burger sauce, tomato, lettuce, caramelized onions, cheddar, beef patty"
+           data-es="Pan brioche, salsa burger, tomate, lechuga, cebolla caramelizada, cheddar, hamburguesa de ternera">
+          Pain brioché, sauce burger, tomate, salade, oignons confits, cheddar, steak haché
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Le Crunchy Barbecue</span>
+          <span class="item-dots"></span>
+          <span class="item-price">14,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Pain brioché, sauce barbecue, mayonnaise, cornichons, salade, cheddar, poulet pané"
+           data-en="Brioche bun, BBQ sauce, mayonnaise, pickles, lettuce, cheddar, breaded chicken"
+           data-es="Pan brioche, salsa barbacoa, mayonesa, pepinillos, lechuga, cheddar, pollo empanado">
+          Pain brioché, sauce barbecue, mayonnaise, cornichons, salade, cheddar, poulet pané
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Le Fondant</span>
+          <span class="item-dots"></span>
+          <span class="item-price">16,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Pain brioché, mayonnaise, cornichons, salade, fromage raclette, oignons confits, steak haché"
+           data-en="Brioche bun, mayonnaise, pickles, lettuce, raclette cheese, caramelized onions, beef patty"
+           data-es="Pan brioche, mayonesa, pepinillos, lechuga, queso raclette, cebolla caramelizada, hamburguesa de ternera">
+          Pain brioché, mayonnaise, cornichons, salade, fromage raclette, oignons confits, steak haché
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Supplément panier de frites" data-en="Extra basket of fries" data-es="Suplemento de patatas fritas">Supplément panier de frites</span>
+          <span class="item-dots"></span>
+          <span class="item-price">3,90 €</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- GALETTES -->
+  <section id="galettes" class="section">
+    <h2 class="section-title">Galettes</h2>
+    <div class="section-subtitle"
+         data-fr="Crêpes salées de blé noir — accompagnées d'une salade"
+         data-en="Savory buckwheat crêpes — served with a salad"
+         data-es="Crepes salados de trigo sarraceno — con ensalada">
+      Crêpes salées de blé noir — accompagnées d'une salade
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Complète" data-en="Complète" data-es="Complète">Complète</span>
+          <span class="item-dots"></span>
+          <span class="item-price">11,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Jambon blanc, œuf, emmental"
+           data-en="Ham, egg, emmental"
+           data-es="Jamón cocido, huevo, emmental">
+          Jambon blanc, œuf, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Classique des Bois</span>
+          <span class="item-dots"></span>
+          <span class="item-price">12,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Jambon blanc, poêlée de champignons, œuf, emmental"
+           data-en="Ham, sautéed mushrooms, egg, emmental"
+           data-es="Jamón cocido, salteado de champiñones, huevo, emmental">
+          Jambon blanc, poêlée de champignons, œuf, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Savoyarde</span>
+          <span class="item-dots"></span>
+          <span class="item-price">13,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Pommes de terre rôties, lardons, crème, reblochon"
+           data-en="Roasted potatoes, bacon, cream, reblochon cheese"
+           data-es="Patatas asadas, panceta, nata, queso reblochon">
+          Pommes de terre rôties, lardons, crème, reblochon
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Campagnarde</span>
+          <span class="item-dots"></span>
+          <span class="item-price">12,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Saucisse fumée, oignons confits, œuf, emmental"
+           data-en="Smoked sausage, caramelized onions, egg, emmental"
+           data-es="Salchicha ahumada, cebolla caramelizada, huevo, emmental">
+          Saucisse fumée, oignons confits, œuf, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Montagnarde</span>
+          <span class="item-dots"></span>
+          <span class="item-price">13,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Jambon de pays, pommes de terre rôties, œuf, fromage raclette"
+           data-en="Country ham, roasted potatoes, egg, raclette cheese"
+           data-es="Jamón serrano, patatas asadas, huevo, queso raclette">
+          Jambon de pays, pommes de terre rôties, œuf, fromage raclette
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="La 4 Fromages" data-en="Four Cheese" data-es="Cuatro Quesos">La 4 Fromages</span>
+          <span class="item-dots"></span>
+          <span class="item-price">13,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Emmental, chèvre, bleu, reblochon"
+           data-en="Emmental, goat cheese, blue cheese, reblochon"
+           data-es="Emmental, queso de cabra, queso azul, reblochon">
+          Emmental, chèvre, bleu, reblochon
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Fermière</span>
+          <span class="item-dots"></span>
+          <span class="item-price">12,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Poulet à la crème, oignons confits, poêlée de champignons, emmental"
+           data-en="Creamy chicken, caramelized onions, sautéed mushrooms, emmental"
+           data-es="Pollo a la crema, cebolla caramelizada, salteado de champiñones, emmental">
+          Poulet à la crème, oignons confits, poêlée de champignons, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Balade Champêtre <span class="veg" data-fr="végé" data-en="veggie" data-es="vegetariana">végé</span></span>
+          <span class="item-dots"></span>
+          <span class="item-price">12,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Légumes grillés, oignons confits, poêlée de champignons, emmental"
+           data-en="Grilled vegetables, caramelized onions, sautéed mushrooms, emmental"
+           data-es="Verduras a la parrilla, cebolla caramelizada, salteado de champiñones, emmental">
+          Légumes grillés, oignons confits, poêlée de champignons, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Douceur de Chèvre <span class="veg" data-fr="végé" data-en="veggie" data-es="vegetariana">végé</span></span>
+          <span class="item-dots"></span>
+          <span class="item-price">12,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Fromage de chèvre, miel, oignons confits, poêlée de champignons, noix torréfiées"
+           data-en="Goat cheese, honey, caramelized onions, sautéed mushrooms, roasted walnuts"
+           data-es="Queso de cabra, miel, cebolla caramelizada, salteado de champiñones, nueces tostadas">
+          Fromage de chèvre, miel, oignons confits, poêlée de champignons, noix torréfiées
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">L'Effilochée</span>
+          <span class="item-dots"></span>
+          <span class="item-price">15,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Effiloché de bœuf, pommes de terre, oignons confits, emmental"
+           data-en="Pulled beef, potatoes, caramelized onions, emmental"
+           data-es="Ternera deshebrada, patatas, cebolla caramelizada, emmental">
+          Effiloché de bœuf, pommes de terre, oignons confits, emmental
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Délicate Nordique" data-en="Delicate Nordic" data-es="Delicada Nórdica">Délicate Nordique</span>
+          <span class="item-dots"></span>
+          <span class="item-price">14,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Saumon fumé, crémeux de fromage, oignons rouges, citron"
+           data-en="Smoked salmon, cream cheese, red onions, lemon"
+           data-es="Salmón ahumado, queso cremoso, cebolla morada, limón">
+          Saumon fumé, crémeux de fromage, oignons rouges, citron
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- CRÊPES SUCRÉES -->
+  <section id="crepes" class="section">
+    <h2 class="section-title" data-fr="Crêpes Sucrées" data-en="Sweet Crêpes" data-es="Crepes Dulces">Crêpes Sucrées</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none"><path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/></svg>
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Nutella Craquant" data-en="Crunchy Nutella" data-es="Nutella Crujiente">Nutella Craquant</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Nutella, noisettes torréfiées"
+           data-en="Nutella, roasted hazelnuts"
+           data-es="Nutella, avellanas tostadas">
+          Nutella, noisettes torréfiées
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Noir Gourmand" data-en="Dark Chocolate Delight" data-es="Chocolate Negro Gourmet">Noir Gourmand</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Chocolat noir fondant, amandes effilées"
+           data-en="Melted dark chocolate, sliced almonds"
+           data-es="Chocolate negro fundido, almendras laminadas">
+          Chocolat noir fondant, amandes effilées
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Douceur Fruitée" data-en="Fruity Delight" data-es="Delicia Frutal">Douceur Fruitée</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Confiture abricot ou fraise"
+           data-en="Apricot or strawberry jam"
+           data-es="Mermelada de albaricoque o fresa">
+          Confiture abricot ou fraise
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Banana Nutella*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">7,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Nutella, banane, chantilly"
+           data-en="Nutella, banana, whipped cream"
+           data-es="Nutella, plátano, nata montada">
+          Nutella, banane, chantilly
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Classique Sucrée" data-en="Sweet Classic" data-es="Clásica Dulce">Classique Sucrée</span>
+          <span class="item-dots"></span>
+          <span class="item-price">4,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Sucre, beurre"
+           data-en="Sugar, butter"
+           data-es="Azúcar, mantequilla">
+          Sucre, beurre
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Classique Bretonne" data-en="Breton Classic" data-es="Clásica Bretona">Classique Bretonne</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Caramel beurre salé"
+           data-en="Salted butter caramel"
+           data-es="Caramelo de mantequilla salada">
+          Caramel beurre salé
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Mont Blanc</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Crème de marron"
+           data-en="Chestnut cream"
+           data-es="Crema de castañas">
+          Crème de marron
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Douceur Miel" data-en="Honey Delight" data-es="Delicia de Miel">Douceur Miel</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Miel, citron"
+           data-en="Honey, lemon"
+           data-es="Miel, limón">
+          Miel, citron
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Douceur Speculoos" data-en="Speculoos Delight" data-es="Delicia de Speculoos">Douceur Speculoos</span>
+          <span class="item-dots"></span>
+          <span class="item-price">6,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Crème de speculoos, spéculoos concassés"
+           data-en="Speculoos cream, crushed speculoos"
+           data-es="Crema de speculoos, speculoos triturados">
+          Crème de speculoos, spéculoos concassés
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Suzette*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">8,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Flambée au Grand Marnier"
+           data-en="Flambéed with Grand Marnier"
+           data-es="Flambeada al Grand Marnier">
+          Flambée au Grand Marnier
+        </p>
+      </div>
+    </div>
+  </section>
+
+  <!-- DESSERTS -->
+  <section id="desserts" class="section">
+    <h2 class="section-title" data-fr="Desserts" data-en="Desserts" data-es="Postres">Desserts</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none"><path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/></svg>
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Notre Moelleux au Chocolat*" data-en="Our Chocolate Fondant*" data-es="Nuestro Coulant de Chocolate*">Notre Moelleux au Chocolat*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">8,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Servi avec une glace vanille"
+           data-en="Served with vanilla ice cream"
+           data-es="Servido con helado de vainilla">
+          Servi avec une glace vanille
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Café ou Thé Gourmand*" data-en="Coffee or Tea Gourmet*" data-es="Café o Té Gourmet*">Café ou Thé Gourmand*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">9,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Mini crêpe, mini moelleux au chocolat, glace vanille"
+           data-en="Mini crêpe, mini chocolate fondant, vanilla ice cream"
+           data-es="Mini crepe, mini coulant de chocolate, helado de vainilla">
+          Mini crêpe, mini moelleux au chocolat, glace vanille
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Supplément chantilly" data-en="Extra whipped cream" data-es="Suplemento de nata montada">Supplément chantilly</span>
+          <span class="item-dots"></span>
+          <span class="item-price">1,90 €</span>
+        </div>
+      </div>
+    </div>
+
+    <p class="note"
+       data-fr="* Supplément de 3 € sur la formule midi."
+       data-en="* €3 supplement on the lunch menu."
+       data-es="* Suplemento de 3 € en el menú del mediodía.">
+      * Supplément de 3 € sur la formule midi.
+    </p>
+  </section>
+
+  <!-- COUPES GLACÉES -->
+  <section id="glaces" class="section">
+    <h2 class="section-title" data-fr="Coupes Glacées" data-en="Ice Cream Sundaes" data-es="Copas de Helado">Coupes Glacées</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none"><path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/></svg>
+    </div>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Colonel Givré*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">8,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Sorbet citron, vodka, chantilly, crêpe dentelle"
+           data-en="Lemon sorbet, vodka, whipped cream, thin crispy crêpe"
+           data-es="Sorbete de limón, vodka, nata montada, crepe fino crujiente">
+          Sorbet citron, vodka, chantilly, crêpe dentelle
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Dame Blanche*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">7,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Glace vanille, chocolat fondant, chantilly, crêpe dentelle"
+           data-en="Vanilla ice cream, melted chocolate, whipped cream, thin crispy crêpe"
+           data-es="Helado de vainilla, chocolate fundido, nata montada, crepe fino crujiente">
+          Glace vanille, chocolat fondant, chantilly, crêpe dentelle
+        </p>
+      </div>
+
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name">Melba Gourmande*</span>
+          <span class="item-dots"></span>
+          <span class="item-price">7,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Glace vanille, glace fraise, coulis de fruits rouges, chantilly, crêpe dentelle"
+           data-en="Vanilla ice cream, strawberry ice cream, red berry coulis, whipped cream, thin crispy crêpe"
+           data-es="Helado de vainilla, helado de fresa, coulis de frutos rojos, nata montada, crepe fino crujiente">
+          Glace vanille, glace fraise, coulis de fruits rouges, chantilly, crêpe dentelle
+        </p>
+      </div>
+    </div>
+
+    <h3 class="subsection-title"
+        data-fr="Glaces au choix"
+        data-en="Ice Cream — pick your flavors"
+        data-es="Helados a elegir">
+      Glaces au choix
+    </h3>
+    <p class="item-desc" style="margin-bottom:0.7rem;"
+       data-fr="Vanille, fraise, chocolat, pistache, citron, café"
+       data-en="Vanilla, strawberry, chocolate, pistachio, lemon, coffee"
+       data-es="Vainilla, fresa, chocolate, pistacho, limón, café">
+      Vanille, fraise, chocolat, pistache, citron, café
+    </p>
+
+    <div class="items">
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="1 boule" data-en="1 scoop" data-es="1 bola">1 boule</span>
+          <span class="item-dots"></span>
+          <span class="item-price">2,90 €</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="2 boules" data-en="2 scoops" data-es="2 bolas">2 boules</span>
+          <span class="item-dots"></span>
+          <span class="item-price">5,60 €</span>
+        </div>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="3 boules" data-en="3 scoops" data-es="3 bolas">3 boules</span>
+          <span class="item-dots"></span>
+          <span class="item-price">8,50 €</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- BOISSONS -->
+  <section id="boissons" class="section">
+    <h2 class="section-title" data-fr="Boissons" data-en="Drinks" data-es="Bebidas">Boissons</h2>
+    <div class="section-orn">
+      <svg width="40" height="10" viewBox="0 0 40 10" fill="none"><path d="M2 5 Q10 9 20 5 Q30 1 38 5" stroke="#C4A35A" stroke-width="0.9" fill="none"/></svg>
+    </div>
+
+    <!-- Happy Hour -->
+    <div class="happy-box">
+      <div class="happy-title">Happy Hour</div>
+      <div class="happy-desc"
+           data-fr="Toutes les boissons à <b>-50%</b> de 18h à 20h<small>Hors softs et boissons chaudes</small>"
+           data-en="All drinks at <b>-50%</b> from 6pm to 8pm<small>Excluding soft drinks and hot beverages</small>"
+           data-es="Todas las bebidas al <b>-50%</b> de 18h a 20h<small>Excepto refrescos y bebidas calientes</small>">
+        Toutes les boissons à <b>-50%</b> de 18h à 20h<small>Hors softs et boissons chaudes</small>
+      </div>
+    </div>
+
+    <!-- Softs -->
+    <h3 class="subsection-title" data-fr="Boissons fraîches" data-en="Cold Drinks" data-es="Refrescos">Boissons fraîches</h3>
+    <div class="items">
+      <div class="item">
+        <div class="item-head"><span class="item-name">Coca Cola 33cl</span><span class="item-dots"></span><span class="item-price">3,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Coca Cola Zéro 33cl</span><span class="item-dots"></span><span class="item-price">3,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Perrier 33cl</span><span class="item-dots"></span><span class="item-price">3,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Diabolo 33cl</span><span class="item-dots"></span><span class="item-price">3,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Grenadine, fraise, pêche, citron, violette"
+           data-en="Grenadine, strawberry, peach, lemon, violet"
+           data-es="Granadina, fresa, melocotón, limón, violeta">
+          Grenadine, fraise, pêche, citron, violette
+        </p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Orangina 25cl</span><span class="item-dots"></span><span class="item-price">3,50 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name" data-fr="Fuze Tea Pêche 25cl" data-en="Fuze Tea Peach 25cl" data-es="Fuze Tea Melocotón 25cl">Fuze Tea Pêche 25cl</span><span class="item-dots"></span><span class="item-price">3,50 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name" data-fr="Jus de fruits 25cl" data-en="Fruit juice 25cl" data-es="Zumo de frutas 25cl">Jus de fruits 25cl</span><span class="item-dots"></span><span class="item-price">3,50 €</span></div>
+        <p class="item-desc"
+           data-fr="Orange, pomme, abricot"
+           data-en="Orange, apple, apricot"
+           data-es="Naranja, manzana, albaricoque">
+          Orange, pomme, abricot
+        </p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Ginger Beer 25cl</span><span class="item-dots"></span><span class="item-price">3,50 €</span></div>
+      </div>
+    </div>
+
+    <!-- Eaux -->
+    <h3 class="subsection-title" data-fr="Eaux" data-en="Water" data-es="Aguas">Eaux</h3>
+    <div class="items">
+      <div class="item">
+        <div class="item-head"><span class="item-name">Vittel 50cl</span><span class="item-dots"></span><span class="item-price">4,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">San Pellegrino 50cl</span><span class="item-dots"></span><span class="item-price">5,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Saint George 1L</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Orezza 1L</span><span class="item-dots"></span><span class="item-price">7,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Chaudes -->
+    <h3 class="subsection-title" data-fr="Boissons chaudes" data-en="Hot Drinks" data-es="Bebidas Calientes">Boissons chaudes</h3>
+    <div class="items">
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Café expresso" data-en="Espresso" data-es="Café expreso">Café expresso</span><span class="item-dots"></span><span class="item-price">2,40 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Décaféiné" data-en="Decaf" data-es="Descafeinado">Décaféiné</span><span class="item-dots"></span><span class="item-price">2,40 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Café allongé" data-en="Americano" data-es="Café americano">Café allongé</span><span class="item-dots"></span><span class="item-price">2,40 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Café noisette" data-en="Macchiato" data-es="Café cortado">Café noisette</span><span class="item-dots"></span><span class="item-price">3,10 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Double expresso" data-en="Double espresso" data-es="Doble expreso">Double expresso</span><span class="item-dots"></span><span class="item-price">4,50 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Café crème" data-en="Café au lait" data-es="Café con leche">Café crème</span><span class="item-dots"></span><span class="item-price">4,50 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Cappuccino</span><span class="item-dots"></span><span class="item-price">4,50 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Chocolat chaud" data-en="Hot chocolate" data-es="Chocolate caliente">Chocolat chaud</span><span class="item-dots"></span><span class="item-price">4,50 €</span></div></div>
+      <div class="item">
+        <div class="item-head"><span class="item-name" data-fr="Thé" data-en="Tea" data-es="Té">Thé</span><span class="item-dots"></span><span class="item-price">3,50 €</span></div>
+        <p class="item-desc" data-fr="Vert, noir, infusion" data-en="Green, black, herbal" data-es="Verde, negro, infusión">Vert, noir, infusion</p>
+      </div>
+      <div class="item"><div class="item-head"><span class="item-name">Irish Coffee</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div></div>
+    </div>
+
+    <!-- Bières -->
+    <h3 class="subsection-title" data-fr="Bières" data-en="Beers" data-es="Cervezas">Bières</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">1664 Blonde</span></div>
+        <div class="price-grid"><span><b>25cl</b>5,20 €</span><span><b>50cl</b>9,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Grimbergen Blonde</span></div>
+        <div class="price-grid"><span><b>25cl</b>5,20 €</span><span><b>50cl</b>9,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Monaco</span></div>
+        <div class="price-grid"><span><b>25cl</b>5,20 €</span><span><b>50cl</b>9,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name" data-fr="Panaché" data-en="Shandy" data-es="Clara">Panaché</span></div>
+        <div class="price-grid"><span><b>25cl</b>5,20 €</span><span><b>50cl</b>9,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Cidres -->
+    <h3 class="subsection-title" data-fr="Cidres" data-en="Ciders" data-es="Sidras">Cidres</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head">
+          <span class="item-name">Val de Rance de Bretagne</span>
+        </div>
+        <p class="item-desc" data-fr="Doux ou brut" data-en="Sweet or dry" data-es="Dulce o seco">Doux ou brut</p>
+        <div class="price-grid"><span><b>25cl</b>4,30 €</span><span><b>50cl</b>8,50 €</span><span><b>75cl</b>12,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Apéritifs & Digestifs -->
+    <h3 class="subsection-title" data-fr="Apéritifs & Digestifs" data-en="Aperitifs & Digestifs" data-es="Aperitivos y Digestivos">Apéritifs & Digestifs</h3>
+    <p class="item-desc" style="margin-bottom:0.7rem;" data-fr="Servis en 4cl" data-en="Served in 4cl" data-es="Servidos en 4cl">Servis en 4cl</p>
+    <div class="items">
+      <div class="item"><div class="item-head"><span class="item-name">Jack Daniel's</span><span class="item-dots"></span><span class="item-price">7,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Whisky JB</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Whisky Johnnie Walker</span><span class="item-dots"></span><span class="item-price">8,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Whisky japonais Nikka" data-en="Nikka Japanese whisky" data-es="Whisky japonés Nikka">Whisky japonais Nikka</span><span class="item-dots"></span><span class="item-price">8,90 €</span></div></div>
+      <div class="item">
+        <div class="item-head"><span class="item-name" data-fr="Kir Vin Blanc ou Breton" data-en="Kir with white wine or cider" data-es="Kir con vino blanco o sidra">Kir Vin Blanc ou Breton</span><span class="item-dots"></span><span class="item-price">5,90 €</span></div>
+        <p class="item-desc" data-fr="Pêche, cassis, mûre" data-en="Peach, blackcurrant, blackberry" data-es="Melocotón, grosella negra, mora">Pêche, cassis, mûre</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Kir Royal</span><span class="item-dots"></span><span class="item-price">10,00 €</span></div>
+        <p class="item-desc" data-fr="Pêche, cassis, mûre" data-en="Peach, blackcurrant, blackberry" data-es="Melocotón, grosella negra, mora">Pêche, cassis, mûre</p>
+      </div>
+      <div class="item"><div class="item-head"><span class="item-name">Ricard</span><span class="item-dots"></span><span class="item-price">5,30 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Martini Rouge" data-en="Red Martini" data-es="Martini Rojo">Martini Rouge</span><span class="item-dots"></span><span class="item-price">5,20 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Get 27</span><span class="item-dots"></span><span class="item-price">5,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Vodka</span><span class="item-dots"></span><span class="item-price">5,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Cognac Hennessy</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name">Calvados</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div></div>
+      <div class="item"><div class="item-head"><span class="item-name" data-fr="Rhum Diplomatico" data-en="Diplomatico Rum" data-es="Ron Diplomatico">Rhum Diplomatico</span><span class="item-dots"></span><span class="item-price">6,90 €</span></div></div>
+    </div>
+
+    <!-- Vins blancs -->
+    <h3 class="subsection-title" data-fr="Vins blancs" data-en="White Wines" data-es="Vinos Blancos">Vins blancs</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Chardonnay Pays d'Oc IGP</span></div>
+        <p class="item-desc">Le Sudiste</p>
+        <div class="price-grid"><span><b>14cl</b>4,90 €</span><span><b>25cl</b>8,90 €</span><span><b>50cl</b>16,90 €</span><span><b>75cl</b>25,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Sancerre AOP Val de Loire</span></div>
+        <p class="item-desc">Les Broux</p>
+        <div class="price-grid"><span><b>14cl</b>6,90 €</span><span><b>25cl</b>10,90 €</span><span><b>50cl</b>18,90 €</span><span><b>75cl</b>31,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Vins rosés -->
+    <h3 class="subsection-title" data-fr="Vins rosés" data-en="Rosé Wines" data-es="Vinos Rosados">Vins rosés</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Domaine Saint-Julien-Les-Vignes</span></div>
+        <p class="item-desc" data-fr="Coteaux d'Aix AOP Bio" data-en="Coteaux d'Aix AOP — Organic" data-es="Coteaux d'Aix AOP Ecológico">Coteaux d'Aix AOP Bio</p>
+        <div class="price-grid"><span><b>14cl</b>5,90 €</span><span><b>25cl</b>9,90 €</span><span><b>50cl</b>17,90 €</span><span><b>75cl</b>26,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Minuty Prestige</span></div>
+        <p class="item-desc">Côtes de Provence AOP</p>
+        <div class="price-grid"><span><b>14cl</b>8,90 €</span><span><b>25cl</b>12,90 €</span><span><b>50cl</b>20,90 €</span><span><b>75cl</b>33,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Vins rouges -->
+    <h3 class="subsection-title" data-fr="Vins rouges" data-en="Red Wines" data-es="Vinos Tintos">Vins rouges</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Pinot Noir Pays d'Oc IGP</span></div>
+        <p class="item-desc">Le Versant</p>
+        <div class="price-grid"><span><b>14cl</b>4,90 €</span><span><b>25cl</b>8,90 €</span><span><b>50cl</b>16,90 €</span><span><b>75cl</b>25,90 €</span></div>
+      </div>
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Côtes-du-Rhône AOP</span></div>
+        <p class="item-desc" data-fr="Les 3 Garçons — Bio" data-en="Les 3 Garçons — Organic" data-es="Les 3 Garçons — Ecológico">Les 3 Garçons — Bio</p>
+        <div class="price-grid"><span><b>14cl</b>4,90 €</span><span><b>25cl</b>8,90 €</span><span><b>50cl</b>16,90 €</span><span><b>75cl</b>25,90 €</span></div>
+      </div>
+    </div>
+
+    <!-- Champagne -->
+    <h3 class="subsection-title">Champagne</h3>
+    <div class="items">
+      <div class="item item-multi">
+        <div class="item-head"><span class="item-name">Nicolas Feuillatte Brut Tradition</span></div>
+        <p class="item-desc">Chouilly, France</p>
+        <div class="price-grid"><span><b>10cl</b>10,00 €</span><span><b>75cl</b>65,00 €</span></div>
+      </div>
+    </div>
+
+    <!-- Cocktails -->
+    <h3 class="subsection-title">Cocktails</h3>
+    <p class="item-desc" style="margin-bottom:0.7rem;" data-fr="Tous à 9,90 €" data-en="All at €9.90" data-es="Todos a 9,90 €">Tous à 9,90 €</p>
+    <div class="items">
+      <div class="item">
+        <div class="item-head"><span class="item-name">Moscow Mule</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Vodka, jus de citron, ginger beer"
+           data-en="Vodka, lemon juice, ginger beer"
+           data-es="Vodka, zumo de limón, ginger beer">Vodka, jus de citron, ginger beer</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Mojito</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Rhum, jus de citron, sirop de sucre, menthe, citron, eau gazeuse"
+           data-en="Rum, lemon juice, sugar syrup, mint, lemon, sparkling water"
+           data-es="Ron, zumo de limón, jarabe de azúcar, menta, limón, agua con gas">Rhum, jus de citron, sirop de sucre, menthe, citron, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Mojito Fruit" data-en="Fruit Mojito" data-es="Mojito de Fruta">Mojito Fruit</span>
+          <span class="item-dots"></span><span class="item-price">9,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Fraise, ananas ou mangue — rhum, jus de citron, purée de fruit, menthe, eau gazeuse"
+           data-en="Strawberry, pineapple or mango — rum, lemon juice, fruit purée, mint, sparkling water"
+           data-es="Fresa, piña o mango — ron, zumo de limón, puré de fruta, menta, agua con gas">Fraise, ananas ou mangue — rhum, jus de citron, purée de fruit, menthe, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Aperol Espresso</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Jus d'orange, Aperol, expresso"
+           data-en="Orange juice, Aperol, espresso"
+           data-es="Zumo de naranja, Aperol, expreso">Jus d'orange, Aperol, expresso</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Aperol Spritz</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Aperol, Prosecco, orange, eau gazeuse"
+           data-en="Aperol, Prosecco, orange, sparkling water"
+           data-es="Aperol, Prosecco, naranja, agua con gas">Aperol, Prosecco, orange, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Saint-Germain Spritz</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Prosecco, liqueur Saint Germain, citron, eau gazeuse"
+           data-en="Prosecco, Saint Germain liqueur, lemon, sparkling water"
+           data-es="Prosecco, licor Saint Germain, limón, agua con gas">Prosecco, liqueur Saint Germain, citron, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Sex on the Beach</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Vodka, liqueur de pêche, jus d'ananas, jus de cranberry"
+           data-en="Vodka, peach liqueur, pineapple juice, cranberry juice"
+           data-es="Vodka, licor de melocotón, zumo de piña, zumo de arándano">Vodka, liqueur de pêche, jus d'ananas, jus de cranberry</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Caïpirinha Black</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Vodka noire, jus de citron vert, citron vert, sirop de sucre"
+           data-en="Black vodka, lime juice, lime, sugar syrup"
+           data-es="Vodka negro, zumo de lima, lima, jarabe de azúcar">Vodka noire, jus de citron vert, citron vert, sirop de sucre</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Piña Colada</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Rhum, jus d'ananas, lait de coco"
+           data-en="Rum, pineapple juice, coconut milk"
+           data-es="Ron, zumo de piña, leche de coco">Rhum, jus d'ananas, lait de coco</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Pineapple Mojito</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Rhum, jus d'ananas, citron vert, menthe fraîche, limonade"
+           data-en="Rum, pineapple juice, lime, fresh mint, lemonade"
+           data-es="Ron, zumo de piña, lima, menta fresca, limonada">Rhum, jus d'ananas, citron vert, menthe fraîche, limonade</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Negroni</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Gin, Campari, Martini rouge"
+           data-en="Gin, Campari, red Martini"
+           data-es="Ginebra, Campari, Martini rojo">Gin, Campari, Martini rouge</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Espresso Martini</span><span class="item-dots"></span><span class="item-price">9,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Vodka, liqueur de café, sirop de sucre, expresso"
+           data-en="Vodka, coffee liqueur, sugar syrup, espresso"
+           data-es="Vodka, licor de café, jarabe de azúcar, expreso">Vodka, liqueur de café, sirop de sucre, expresso</p>
+      </div>
+    </div>
+
+    <!-- Mocktails -->
+    <h3 class="subsection-title" data-fr="Mocktails (sans alcool)" data-en="Mocktails (Non-Alcoholic)" data-es="Mocktails (Sin Alcohol)">Mocktails (sans alcool)</h3>
+    <p class="item-desc" style="margin-bottom:0.7rem;" data-fr="Tous à 8,90 €" data-en="All at €8.90" data-es="Todos a 8,90 €">Tous à 8,90 €</p>
+    <div class="items">
+      <div class="item">
+        <div class="item-head"><span class="item-name">Virgin Mojito</span><span class="item-dots"></span><span class="item-price">8,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Jus de citron, sirop de sucre, menthe, citron, eau gazeuse"
+           data-en="Lemon juice, sugar syrup, mint, lemon, sparkling water"
+           data-es="Zumo de limón, jarabe de azúcar, menta, limón, agua con gas">Jus de citron, sirop de sucre, menthe, citron, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head">
+          <span class="item-name" data-fr="Virgin Mojito Fruit" data-en="Virgin Fruit Mojito" data-es="Virgin Mojito de Fruta">Virgin Mojito Fruit</span>
+          <span class="item-dots"></span><span class="item-price">8,90 €</span>
+        </div>
+        <p class="item-desc"
+           data-fr="Fraise, ananas ou mangue — jus de citron, purée de fruit, menthe, citron, eau gazeuse"
+           data-en="Strawberry, pineapple or mango — lemon juice, fruit purée, mint, lemon, sparkling water"
+           data-es="Fresa, piña o mango — zumo de limón, puré de fruta, menta, limón, agua con gas">Fraise, ananas ou mangue — jus de citron, purée de fruit, menthe, citron, eau gazeuse</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Virgin Sex on the Beach</span><span class="item-dots"></span><span class="item-price">8,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Jus d'ananas, jus de cranberry, sirop de pêche"
+           data-en="Pineapple juice, cranberry juice, peach syrup"
+           data-es="Zumo de piña, zumo de arándano, jarabe de melocotón">Jus d'ananas, jus de cranberry, sirop de pêche</p>
+      </div>
+      <div class="item">
+        <div class="item-head"><span class="item-name">Virgin Piña Colada</span><span class="item-dots"></span><span class="item-price">8,90 €</span></div>
+        <p class="item-desc"
+           data-fr="Jus d'ananas, lait de coco"
+           data-en="Pineapple juice, coconut milk"
+           data-es="Zumo de piña, leche de coco">Jus d'ananas, lait de coco</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- FOOTER -->
+  <footer class="footer">
+    <div class="footer-block">
+      <p data-fr="Tous nos plats sont faits maison."
+         data-en="All our dishes are homemade."
+         data-es="Todos nuestros platos son caseros.">
+        Tous nos plats sont faits maison.
+      </p>
+      <p data-fr="Liste des allergènes disponible sur demande."
+         data-en="Allergen list available on request."
+         data-es="Lista de alérgenos disponible bajo petición.">
+        Liste des allergènes disponible sur demande.
+      </p>
+    </div>
+
+    <div class="footer-block">
+      <p class="addr">25 Av. du Général de Gaulle</p>
+      <p>78600 Maisons-Laffitte · <a href="tel:0952196961" style="color:inherit;">09 52 19 69 61</a></p>
+      <p data-fr="Mardi au dimanche · 12h–14h30 · 19h–22h30"
+         data-en="Tuesday to Sunday · 12–2:30pm · 7–10:30pm"
+         data-es="Martes a domingo · 12h–14h30 · 19h–22h30">
+        Mardi au dimanche · 12h–14h30 · 19h–22h30
+      </p>
+    </div>
+
+    <p class="disclaimer"
+       data-fr="Prix nets en euros, taxes et service compris. Chèques non acceptés. L'abus d'alcool est dangereux pour la santé, à consommer avec modération."
+       data-en="Prices in euros, taxes and service included. Cheques not accepted. Alcohol abuse is dangerous for your health — please drink responsibly."
+       data-es="Precios en euros, impuestos y servicio incluidos. No se aceptan cheques. El abuso de alcohol es peligroso para la salud — consuma con moderación.">
+      Prix nets en euros, taxes et service compris. Chèques non acceptés. L'abus d'alcool est dangereux pour la santé, à consommer avec modération.
+    </p>
+  </footer>
+
+<script>
+(function(){
+  var STORAGE_KEY = 'lpc_menu_lang';
+  var validLangs = ['fr', 'en', 'es'];
+
+  function detectLang() {
+    var saved = null;
+    try { saved = localStorage.getItem(STORAGE_KEY); } catch(e) {}
+    if (saved && validLangs.indexOf(saved) !== -1) return saved;
+    var nav = (navigator.language || 'fr').toLowerCase().slice(0,2);
+    if (validLangs.indexOf(nav) !== -1) return nav;
+    return 'fr';
+  }
+
+  function setLang(lang) {
+    if (validLangs.indexOf(lang) === -1) lang = 'fr';
+    document.documentElement.lang = lang;
+    try { localStorage.setItem(STORAGE_KEY, lang); } catch(e) {}
+
+    // Swap all translatable strings (supports simple HTML in the data attrs)
+    var els = document.querySelectorAll('[data-fr]');
+    for (var i = 0; i < els.length; i++) {
+      var el = els[i];
+      var val = el.getAttribute('data-' + lang);
+      if (val === null) val = el.getAttribute('data-fr');
+      el.innerHTML = val;
+    }
+
+    // Update active state on lang buttons
+    var btns = document.querySelectorAll('[data-set-lang]');
+    for (var j = 0; j < btns.length; j++) {
+      btns[j].classList.toggle('active', btns[j].getAttribute('data-set-lang') === lang);
+    }
+
+    // Update page title
+    var titles = { fr: 'Carte — La Petite Crêperie', en: 'Menu — La Petite Crêperie', es: 'Carta — La Petite Crêperie' };
+    document.title = titles[lang];
+  }
+
+  // Wire up language buttons
+  document.addEventListener('click', function(e) {
+    var b = e.target.closest('[data-set-lang]');
+    if (b) { setLang(b.getAttribute('data-set-lang')); }
+  });
+
+  // Active category on scroll
+  var navLinks = document.querySelectorAll('#catNav a');
+  var sections = [];
+  for (var k = 0; k < navLinks.length; k++) {
+    var id = navLinks[k].getAttribute('href').slice(1);
+    var s = document.getElementById(id);
+    if (s) sections.push({ id: id, el: s, link: navLinks[k] });
+  }
+
+  function updateActiveCat() {
+    var top = window.scrollY + 130;
+    var current = sections[0];
+    for (var i = 0; i < sections.length; i++) {
+      if (sections[i].el.offsetTop <= top) current = sections[i];
+    }
+    for (var j = 0; j < sections.length; j++) {
+      sections[j].link.classList.toggle('active', sections[j] === current);
+    }
+    // scroll nav to keep active in view
+    if (current && current.link) {
+      var nav = document.getElementById('catNav');
+      var linkRect = current.link.getBoundingClientRect();
+      var navRect = nav.getBoundingClientRect();
+      if (linkRect.left < navRect.left + 20 || linkRect.right > navRect.right - 20) {
+        nav.scrollTo({ left: current.link.offsetLeft - 20, behavior: 'smooth' });
+      }
+    }
+  }
+
+  var scrollTimeout;
+  window.addEventListener('scroll', function() {
+    if (scrollTimeout) return;
+    scrollTimeout = setTimeout(function() {
+      updateActiveCat();
+      scrollTimeout = null;
+    }, 100);
+  });
+
+  // Init
+  setLang(detectLang());
+  updateActiveCat();
+})();
+</script>
+
+</body>
+</html>

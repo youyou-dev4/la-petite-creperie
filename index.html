@@ -123,109 +123,106 @@
   .btn .lbl { flex: 1; text-align: left; }
   .btn .arr { opacity: 0.5; flex-shrink: 0; }
 
-  /* RATING — cliquable */
-  .rating {
-    background: var(--gold-dim);
-    border: 1px solid var(--gold-border);
+  /* REVIEW HERO — bloc avis mis en avant en haut de page */
+  .review-hero {
+    display: block;
+    background: linear-gradient(135deg, #F5EAD0 0%, #E8D9B0 100%);
     border-radius: 14px;
-    padding: 0.85rem 1.1rem;
-    display: flex; align-items: center; gap: 12px;
+    padding: 0.75rem 0.85rem 0.7rem;
     text-decoration: none;
-    transition: background 0.15s;
-    cursor: pointer;
+    color: var(--teal-deeper);
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 3px 16px rgba(196,163,90,0.25), 0 0 0 1px rgba(196,163,90,0.32);
+    margin-top: 0.25rem;
+    animation: reviewGlow 3.5s ease-in-out infinite;
   }
-  .rating:hover { background: rgba(196,163,90,0.25); }
-  .stars { font-size: 0.9rem; color: var(--gold); letter-spacing: 2px; }
-  .score { font-size: 1.05rem; font-weight: 500; color: var(--cream); white-space: nowrap; }
-  .r-lbl { font-size: 0.72rem; color: var(--gold-light); line-height: 1.45; opacity: 0.85; }
+  @keyframes reviewGlow {
+    0%, 100% { box-shadow: 0 3px 16px rgba(196,163,90,0.25), 0 0 0 1px rgba(196,163,90,0.32); }
+    50%      { box-shadow: 0 5px 22px rgba(196,163,90,0.45), 0 0 0 1px rgba(196,163,90,0.5); }
+  }
+  .review-hero::before {
+    content: '';
+    position: absolute;
+    top: -50%; left: -80%;
+    width: 55%; height: 200%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.55), transparent);
+    transform: skewX(-22deg);
+    animation: reviewShine 5s ease-in-out infinite;
+    pointer-events: none;
+  }
+  @keyframes reviewShine {
+    0%   { left: -80%; }
+    55%  { left: 160%; }
+    100% { left: 160%; }
+  }
+  .review-hero:active { transform: scale(0.99); }
+
+  .review-hero-top {
+    display: flex; align-items: center; gap: 10px;
+    margin-bottom: 0.55rem;
+    position: relative; z-index: 1;
+  }
+  .review-hero .g-badge {
+    width: 34px; height: 34px; flex-shrink: 0;
+    background: #fff; border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    box-shadow: 0 1px 6px rgba(0,0,0,0.1);
+  }
+  .review-hero .g-badge svg { width: 18px; height: 18px; }
+
+  .review-hero-copy { flex: 1; min-width: 0; }
+  .review-hero-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.02rem; font-weight: 600;
+    line-height: 1.15; color: var(--teal-deeper);
+  }
+  .review-hero-sub {
+    font-size: 0.68rem;
+    color: rgba(0,61,86,0.72);
+    margin-top: 2px; line-height: 1.3;
+  }
+
+  .review-hero-rating {
+    display: flex; align-items: center; gap: 7px;
+    background: rgba(255,255,255,0.4);
+    border-radius: 8px;
+    padding: 0.4rem 0.65rem;
+    margin-bottom: 0.5rem;
+    position: relative; z-index: 1;
+  }
+  .rh-stars {
+    color: #E8A100;
+    font-size: 0.85rem;
+    letter-spacing: 1.5px;
+    text-shadow: 0 1px 2px rgba(0,0,0,0.08);
+  }
+  .rh-score {
+    font-size: 0.72rem;
+    color: var(--teal-deeper);
+    font-weight: 500;
+    opacity: 0.85;
+  }
+  .rh-score strong { font-weight: 600; }
+
+  .review-hero-cta {
+    display: flex; align-items: center; justify-content: center; gap: 8px;
+    background: var(--teal-deeper);
+    color: #F5EAD0;
+    border-radius: 9px;
+    padding: 0.6rem;
+    font-size: 0.82rem;
+    font-weight: 500;
+    letter-spacing: 0.02em;
+    position: relative; z-index: 1;
+    box-shadow: 0 2px 6px rgba(0,0,0,0.12);
+  }
+  .review-hero-cta svg { flex-shrink: 0; width: 14px; height: 14px; }
 
   /* SECTION LABEL */
   .sec-lbl {
     font-size: 0.6rem; text-transform: uppercase;
     letter-spacing: 0.14em; color: var(--gold-light); opacity: 0.65;
-  }
-
-  /* AC BADGE */
-  .ac-badge {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: linear-gradient(135deg, rgba(100,200,255,0.1), rgba(196,163,90,0.08));
-    border: 1px solid rgba(100,200,255,0.25);
-    border-radius: 12px;
-    padding: 0.6rem 1rem;
-    position: relative;
-    overflow: hidden;
-  }
-
-  .ac-badge::before {
-    content: '';
-    position: absolute;
-    top: 0; left: -100%;
-    width: 60%;
-    height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(100,200,255,0.12), transparent);
-    animation: acShimmer 3s ease-in-out infinite;
-  }
-
-  @keyframes acShimmer {
-    0%   { left: -100%; }
-    50%  { left: 150%; }
-    100% { left: 150%; }
-  }
-
-  .ac-icon {
-    font-size: 1.1rem;
-    animation: acPulse 2.5s ease-in-out infinite;
-    flex-shrink: 0;
-  }
-
-  @keyframes acPulse {
-    0%, 100% { opacity: 1; transform: scale(1); }
-    50%       { opacity: 0.6; transform: scale(0.88); }
-  }
-
-  .ac-text {
-    display: flex;
-    flex-direction: column;
-    gap: 1px;
-  }
-
-  .ac-text strong {
-    font-size: 0.78rem;
-    font-weight: 500;
-    color: #a8dff0;
-    letter-spacing: 0.03em;
-  }
-
-  .ac-text span {
-    font-size: 0.62rem;
-    color: var(--cream);
-    opacity: 0.5;
-    letter-spacing: 0.04em;
-  }
-
-  .ac-dots {
-    margin-left: auto;
-    display: flex;
-    gap: 3px;
-    align-items: center;
-  }
-
-  .ac-dots i {
-    display: block;
-    width: 4px; height: 4px;
-    border-radius: 50%;
-    background: #a8dff0;
-    opacity: 0.4;
-    animation: acDot 1.5s ease-in-out infinite;
-  }
-  .ac-dots i:nth-child(2) { animation-delay: 0.3s; }
-  .ac-dots i:nth-child(3) { animation-delay: 0.6s; }
-
-  @keyframes acDot {
-    0%, 100% { opacity: 0.2; transform: scale(0.8); }
-    50%       { opacity: 0.8; transform: scale(1.2); }
   }
 
   /* SOCIAL GRID — 3 colonnes */
@@ -308,19 +305,39 @@
 
     <div class="content">
 
-      <!-- Badge climatisation -->
-      <div class="ac-badge">
-        <span class="ac-icon">❄️</span>
-        <div class="ac-text">
-          <strong>Salle climatisée</strong>
-          <span>Profitez d'une fraîcheur agréable</span>
+      <!-- BLOC AVIS GOOGLE — mis en avant -->
+      <a href="https://search.google.com/local/writereview?placeid=ChIJsf-7WA1h5kcR6zMCTQ-6VTM" target="_blank" class="review-hero" aria-label="Laisser un avis sur Google">
+        <div class="review-hero-top">
+          <div class="g-badge">
+            <svg viewBox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+              <path fill="#FFC107" d="M43.611 20.083H42V20H24v8h11.303c-1.649 4.657-6.08 8-11.303 8-6.627 0-12-5.373-12-12s5.373-12 12-12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 12.955 4 4 12.955 4 24s8.955 20 20 20 20-8.955 20-20c0-1.341-.138-2.65-.389-3.917z"/>
+              <path fill="#FF3D00" d="M6.306 14.691l6.571 4.819C14.655 15.108 18.961 12 24 12c3.059 0 5.842 1.154 7.961 3.039l5.657-5.657C34.046 6.053 29.268 4 24 4 16.318 4 9.656 8.337 6.306 14.691z"/>
+              <path fill="#4CAF50" d="M24 44c5.166 0 9.86-1.977 13.409-5.192l-6.19-5.238A11.91 11.91 0 0 1 24 36c-5.202 0-9.619-3.317-11.283-7.946l-6.522 5.025C9.505 39.556 16.227 44 24 44z"/>
+              <path fill="#1976D2" d="M43.611 20.083H42V20H24v8h11.303a12.04 12.04 0 0 1-4.087 5.571l.003-.002 6.19 5.238C36.971 39.205 44 34 44 24c0-1.341-.138-2.65-.389-3.917z"/>
+            </svg>
+          </div>
+          <div class="review-hero-copy">
+            <div class="review-hero-title">Vous avez aimé votre visite ?</div>
+            <div class="review-hero-sub">Un petit avis nous aide énormément 💛</div>
+          </div>
         </div>
-        <div class="ac-dots">
-          <i></i><i></i><i></i>
-        </div>
-      </div>
 
-      <!-- Réseaux sociaux EN PREMIER -->
+        <div class="review-hero-rating">
+          <span class="rh-stars">★★★★★</span>
+          <span class="rh-score"><strong>4,5</strong> / 5 sur Google</span>
+        </div>
+
+        <div class="review-hero-cta">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <path d="M12 20h9"/>
+            <path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/>
+          </svg>
+          <span>Laisser un avis Google</span>
+          <span>→</span>
+        </div>
+      </a>
+
+      <!-- Réseaux sociaux -->
       <p class="sec-lbl">Nous suivre</p>
 
       <div class="social-grid">
@@ -365,7 +382,7 @@
         <span class="arr">→</span>
       </a>
 
-      <a href="https://www.lapetitecreperie-maisonslaffitte.fr/menus-carte/" target="_blank" class="btn btn-outline">
+      <a href="menu.html" class="btn btn-outline">
         <div class="btn-icon">
           <svg width="18" height="18" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24"><path d="M9 5H7a2 2 0 0 0-2 2v12a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V7a2 2 0 0 0-2-2h-2M9 5a2 2 0 0 0 2 2h2a2 2 0 0 0 2-2M9 5a2 2 0 0 0 2-2h2a2 2 0 0 0 2 2"/></svg>
         </div>
@@ -387,13 +404,6 @@
         </div>
         <span class="lbl">09 52 19 69 61</span>
         <span class="arr">→</span>
-      </a>
-
-      <!-- Note cliquable vers avis TheFork -->
-      <a href="https://www.thefork.fr/restaurant/la-petite-creperie-r856089/avis" target="_blank" class="rating">
-        <div><div class="stars">★★★★★</div></div>
-        <div class="score">+9 / 10</div>
-        <div class="r-lbl">Noté Excellent<br>sur TheFork · +150 avis</div>
       </a>
 
     </div>
